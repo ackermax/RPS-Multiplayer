@@ -1,0 +1,13 @@
+body {
+    background-color: lightgreen;
+}
+
+#chatbox {
+    margin: 0 auto;
+}
+
+#chat-text {
+    background-color: white;
+    width: 300px;
+    height: 200px;
+}

@@ -11,4 +11,6 @@ $(document).ready(function(){
   firebase.initializeApp(config);
   
   var dBase = firebase.database();
+
+  console.log(dBase);
 });
