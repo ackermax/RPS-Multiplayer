@@ -23,6 +23,12 @@ $(document).ready(function () {
   var gameStep;
   var player1Choice = "";
   var player2Choice = "";
+  var player1Wins = 0;
+  var player2Wins = 0;
+  var player1Losses = 0;
+  var player2Losses = 0;
+  var player1Name = "";
+  var player2Name = "";
 
   //trying to set up player one and two
   db.ref("/playerSelect").on("value", function (snap) {
@@ -147,6 +153,13 @@ $(document).ready(function () {
     var playerPlayer = snap.val().player;
     console.log(playerPlayer);
 
+    if (playerPlayer == 1) {
+      player1Name = playerName;
+    }
+    else if (playerPlayer == 2) {
+      player2Name = playerName;
+    }
+
     //make an h4 tag
     $("<h4>").addClass("score").attr("id", "player" + playerPlayer + "-score")
       //stick our html in there
@@ -184,7 +197,7 @@ $(document).ready(function () {
       //if you're player 1 you get to choose
       if (player == 1) {
         $("#player1-choice")
-        .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
+          .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
       }
     }
     //step 2:
@@ -196,20 +209,95 @@ $(document).ready(function () {
       //if you're player 2 you get to choose
       if (player == 2) {
         $("#player2-choice")
-        .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
+          .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
       }
-      
+
     }
     //step 3:
     else if (gameStep == 3) {
       //remove the lightborder
       $("#player2-gamespace").removeClass("lightborder");
-      
+      //show the choice in each player's div
+      $("#player1-choice").empty();
+      $("#player2-choice").empty();
+      $("<h2>").text(player1Choice).appendTo("#player1-choice");
+      $("<h2>").text(player2Choice).appendTo("#player2-choice");
+      console.log(player1Choice + " " + player2Choice);
+      //let's figure out who wins!
+
+      //it's a tie!
+      if (player1Choice == player2Choice) {
+        $("#results").empty();
+        $("<h2>").text("It's a tie!").appendTo("#results");
+
+      }
+      else if (player1Choice == "rock") {
+        if (player2Choice == "paper") {
+          player1Losses++;
+          player2Wins++;
+
+          $("#results").empty();
+          $("<h2>").text(player2Name + " wins!").appendTo("#results");
+        }
+        else if (player2Choice == "scissors") {
+          player1Wins++;
+          player2Losses++;
+
+          $("#results").empty();
+          $("<h2>").text(player1Name + " wins!").appendTo("#results");
+        }
+      }
+      else if (player1Choice == "paper") {
+        if (player2Choice == "scissors") {
+          player1Losses++;
+          player2Wins++;
+
+          $("#results").empty();
+          $("<h2>").text(player2Name + " wins!").appendTo("#results");
+        }
+        else if (player2Choice == "rock") {
+          player1Wins++;
+          player2Losses++;
+
+          $("#results").empty();
+          $("<h2>").text(player1Name + " wins!").appendTo("#results");
+        }
+        else if (player1Choice == "scissors") {
+          if (player2Choice == "rock") {
+            player1Losses++;
+            player2Wins++;
+
+            $("#results").empty();
+            $("<h2>").text(player2Name + " wins!").appendTo("#results");
+          }
+          else if (player2Choice == "paper") {
+            player1Wins++;
+            player2Losses++;
+
+            $("#results").empty();
+            $("<h2>").text(player1Name + " wins!").appendTo("#results");
+          }
+        }
+      }
+      //send the scores up to the database
+      db.ref("playerScores").set({
+        "p1wins": player1Wins,
+        "p1losses": player1Losses,
+        "p2wins": player2Wins,
+        "p2losses": player2Losses
+      })
+      setTimeout(function () {
+        //set gameStep to 1 and push it up
+        gameStep = 1;
+        db.ref("/gameStep").set({
+          "step": gameStep
+        });
+      }, 3000);
     }
   });
 
   //when a player clicks a choice
-  $(document).on("click", ".rps-choice" ,function(){
+  $(document).on("click", ".rps-choice", function () {
     //store the choice
     var userChoice = $(this).attr("choice");
     //are they player 1 or 2?
@@ -255,7 +343,7 @@ $(document).ready(function () {
   });
 
   //update the playerchoice when we get one from firebase
-  db.ref("/playerChoice").on("child_added", function(snap){
+  db.ref("/playerChoice").on("child_added", function (snap) {
     if (snap.val().player == 1) {
       player1Choice = snap.val().choice;
     }
