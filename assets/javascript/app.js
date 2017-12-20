@@ -58,9 +58,11 @@ $(document).ready(function () {
 
     //make a <p> tag and stick some text in there!
     $("<p>")
-    .html("<span id='player" + chatPlayer +"'>"+chatName+"</span>: " + chatText)
+    .html("<span id='player" + chatPlayer +"-textname'>"+chatName+"</span>: " + chatText)
     //stick that stuff in the text box log thing!
     .appendTo("#chat-text");
+
+    db.ref("chatLog").onDisconnect().remove();
   });
 
   //when someone clicks the send button to send a chat message
