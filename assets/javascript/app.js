@@ -53,6 +53,18 @@ $(document).ready(function () {
   $("#chat-submit").click(function(e){
     //stop our button from doing things
     e.preventDefault();
-    
+
+    //grab the data in the input box and store it
+    var chatText = $("#chat-input").val();
+
+    //clear the input
+    $("#chat-input").val("");
+
+    //push that data up and the name to the Firebase database
+    db.ref("chatLog").push({
+      "name": name,
+      "player": player,
+      "text": chatText,
+    });
   });
 });
