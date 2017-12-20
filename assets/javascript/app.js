@@ -77,13 +77,7 @@ $(document).ready(function () {
       .appendTo("#chat-text");
 
 
-    db.ref("/chatLog").onDisconnect().set({
-      "disconnect": {
-        "name": name,
-        "player": player,
-        "text": name + " has disconnected from the game."
-      }
-    });
+    db.ref("/chatLog").onDisconnect().remove();
 
   });
 
@@ -192,6 +186,17 @@ $(document).ready(function () {
 
     //step 1:
     if (gameStep == 1) {
+      //empty the divs
+      $("#player1-choice").empty();
+      $("#player2-choice").empty();
+      $("#results").empty();
+
+      //clear any choices if they were there from the last round
+      db.ref("/playerChoice").set(null);
+
+      //add stuff to results that says we're in a game
+      $("<h2>").text("It's go time!").appendTo("#results");
+
       //add the border to player 1
       $("#player1-gamespace").addClass("lightborder");
       //if you're player 1 you get to choose
@@ -286,6 +291,13 @@ $(document).ready(function () {
         "p2wins": player2Wins,
         "p2losses": player2Losses
       })
+      //put the scores in the divs
+      $("#player1-wins").text(player1Wins);
+      $("#player2-wins").text(player2Wins);
+      $("#player1-losses").text(player1Losses);
+      $("#player2-losses").text(player2Losses);
+
+      //after 3 seconds we start it all over again
       setTimeout(function () {
         //set gameStep to 1 and push it up
         gameStep = 1;
