@@ -36,6 +36,7 @@ $(document).ready(function () {
       isPlayer1 = true;
       db.ref("/playerSelect/player1").set(true);
       db.ref("playerSelect/player1").onDisconnect().set(false);
+      
     }
 
     //if there's no player 2 and there is a player 1 you're player 2
@@ -46,11 +47,13 @@ $(document).ready(function () {
       isPlayer2 = true;
       db.ref("/playerSelect/player2").set(true);
       db.ref("playerSelect/player2").onDisconnect().set(false);
+      
     }
+
   });
 
   //we're gonna populate our chat log now with the firebase data
-  db.ref("chatLog").on("child_added", function(snap){
+  db.ref("chatLog").on("child_added", function (snap) {
     //grab the name, player number, and text and stick em in variables for ease of use
     var chatName = snap.val().name;
     var chatPlayer = snap.val().player;
@@ -58,15 +61,15 @@ $(document).ready(function () {
 
     //make a <p> tag and stick some text in there!
     $("<p>")
-    .html("<span id='player" + chatPlayer +"-textname'>"+chatName+"</span>: " + chatText)
-    //stick that stuff in the text box log thing!
-    .appendTo("#chat-text");
-
+      .html("<span id='player" + chatPlayer + "-textname'>" + chatName + "</span>: " + chatText)
+      //stick that stuff in the text box log thing!
+      .appendTo("#chat-text");
+      
     db.ref("chatLog").onDisconnect().remove();
   });
 
   //when someone clicks the send button to send a chat message
-  $("#chat-submit").click(function(e){
+  $("#chat-submit").click(function (e) {
     //stop our button from doing things
     e.preventDefault();
 
