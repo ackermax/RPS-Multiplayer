@@ -113,7 +113,7 @@ $(document).ready(function () {
       name = nameVal;
 
       //let the player know we know their name
-      $("<h2>").text("Welcome to the game, " + name + "! Good luck!").prependTo("#game-container");
+      $("<h2 id='welcome-message'>").text("Welcome to the game, " + name + "! Good luck!").prependTo("#game-container");
     }
   });
 });
