@@ -89,3 +89,17 @@ padding: 20px 0 20px 0;
     text-align: center;
     width: 100%;
 }
+
+#player1-choice p {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#player2-choice p {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.light-border {
+    border: 2px solid yellow;
+}

@@ -15,11 +15,12 @@ $(document).ready(function () {
 
   //Let's try to make chat functionality
 
-  //setting a local variable to tell whether I'm player one or not also setting my name (currently just as player)
+  //setting global variables
   var player;
   var name = "";
   var isPlayer1;
   var isPlayer2;
+  var gameStep;
 
   //trying to set up player one and two
   db.ref("/playerSelect").on("value", function (snap) {
@@ -57,17 +58,25 @@ $(document).ready(function () {
   //we're gonna populate our chat log now with the firebase data
   db.ref("chatLog").on("child_added", function (snap) {
     //grab the name, player number, and text and stick em in variables for ease of use
-    var chatName = snap.val().name;
+    var chatName = snap.val().name + ": ";
     var chatPlayer = snap.val().player;
     var chatText = snap.val().text;
 
     //make a <p> tag and stick some text in there!
     $("<p>")
-      .html("<span id='player" + chatPlayer + "-textname'>" + chatName + "</span>: " + chatText)
+      .html("<span id='player" + chatPlayer + "-textname'>" + chatName + "</span>" + chatText)
       //stick that stuff in the text box log thing!
       .appendTo("#chat-text");
 
-    db.ref("chatLog").onDisconnect().remove();
+
+    db.ref("/chatLog").onDisconnect().set({
+      "disconnect": {
+        "name" : name,
+        "player": player,
+        "text": name + " has disconnected from the game."
+      }
+    });
+
   });
 
   //when someone clicks the send button to send a chat message
@@ -146,14 +155,36 @@ $(document).ready(function () {
     //Let's change the waiting on Player part of our gamespaces
     $("#player" + playerPlayer + "-name").text(playerName);
   });
-  
-  db.ref("/playerNames").on("value", function(snap){
-     //check if player 1 and player 2 have signed in
-     if (snap.child("player1").exists() && snap.child("player2").exists()) {
+
+  db.ref("/playerNames").on("value", function (snap) {
+    //check if player 1 and player 2 have signed in
+    if (snap.child("player1").exists() && snap.child("player2").exists()) {
       //start the game
       db.ref("/gameStep").set({
         "step": 1
       });
+      db.ref("/gameStep").onDisconnect().set({
+        "step": 0
+      });
+    }
+  });
+
+  //check to see what step of the game we are on
+  db.ref("/gameStep").on("value", function(snap){
+    //grab the game step and save it
+    gameStep = snap.val().step;
+    //now we write code based on which step it is
+
+    //step 1:
+    if (gameStep == 1) {
+      //add the border to player 1
+      $("#player1-gamespace").addClass("light-border");
+      //if you're player 1 you get to choose
+      if (player == 1) {
+        $("<p>")
+        .html("Rock</p><br><p>Paper</p><br><p>Scissors")
+        .appendTo("#player1-choice");
+      }
     }
   });
 });
