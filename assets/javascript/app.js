@@ -130,7 +130,7 @@ $(document).ready(function () {
   });
 
   //when someone puts a name into firebase
-  db.ref("/playerNames").on("child_added", function(snap){
+  db.ref("/playerNames").on("child_added", function (snap) {
     //we neeed to grab the info
     var playerName = snap.val().name;
     var playerPlayer = snap.val().player;
@@ -138,12 +138,22 @@ $(document).ready(function () {
 
     //make an h4 tag
     $("<h4>").addClass("score").attr("id", "player" + playerPlayer + "-score")
-    //stick our html in there
-    .html("Wins: <span id='player"+playerPlayer+"-wins'>0</span> | Losses: <span id='player"+playerPlayer+"-losses'>0</span>")
-    //append it to the right gamespace
-    .appendTo("#player"+playerPlayer+"-gamespace");
+      //stick our html in there
+      .html("Wins: <span id='player" + playerPlayer + "-wins'>0</span> | Losses: <span id='player" + playerPlayer + "-losses'>0</span>")
+      //append it to the right gamespace
+      .appendTo("#player" + playerPlayer + "-gamespace");
 
     //Let's change the waiting on Player part of our gamespaces
     $("#player" + playerPlayer + "-name").text(playerName);
+  });
+  
+  db.ref("/playerNames").on("value", function(snap){
+     //check if player 1 and player 2 have signed in
+     if (snap.child("player1").exists() && snap.child("player2").exists()) {
+      //start the game
+      db.ref("/gameStep").set({
+        "step": 1
+      });
+    }
   });
 });
