@@ -20,16 +20,23 @@
     <br>
     <br>
     <div id="name-select">
-            <p>Hello, Player <span id="player-number-span"></span>! Please tell us your name.</p>
+        <p>Hello, Player
+            <span id="player-number-span"></span>! Please tell us your name.</p>
         <form id="name-form">
             <input type="text" placeholder="name" id="name-input">
             <input type="submit" id="name-submit">
         </form>
     </div>
     <div id="game-container">
-        <div class="gamespace" id="player1-gamespace"></div>
-        <div class="gamespace" id="neutral-gamespace"></div>
-        <div class="gamespace" id="player2-gamespace"></div>
+        <div class="gamespace" id="player1-gamespace">
+            <h2 id="player1-name">Waiting on Player 1</h2>
+        </div>
+        <div class="gamespace" id="neutral-gamespace">
+            <h2>Let's get ready to rumble!</h2>
+        </div>
+        <div class="gamespace" id="player2-gamespace">
+            <h2 id="player2-name">Waiting on Player 2</h2>
+        </div>
     </div>
     <div id="chatbox">
         <div id="chat-text"></div>

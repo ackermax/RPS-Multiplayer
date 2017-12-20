@@ -22,7 +22,6 @@ $(document).ready(function () {
   var isPlayer2;
 
   //trying to set up player one and two
-
   db.ref("/playerSelect").on("value", function (snap) {
     //pull down the player one and player 2 variables
     isPlayer1 = snap.child("player1").val();
@@ -32,25 +31,25 @@ $(document).ready(function () {
     if (isPlayer1 == false && player !== 2) {
       console.log("You are Player 1!");
       player = 1;
-      name = "Player" + player;
+
       isPlayer1 = true;
       db.ref("/playerSelect/player1").set(true);
       db.ref("playerSelect/player1").onDisconnect().set(false);
       //add player number to the name input div
       $("#player-number-span").text(player);
-      
+
     }
 
     //if there's no player 2 and there is a player 1 you're player 2
     else if (isPlayer1 == true && isPlayer2 == false && player !== 1) {
       console.log("You are Player 2!");
       player = 2;
-      name = "Player" + player;
+
       isPlayer2 = true;
       db.ref("/playerSelect/player2").set(true);
       db.ref("playerSelect/player2").onDisconnect().set(false);
       $("#player-number-span").text(player);
-      
+
     }
 
   });
@@ -82,16 +81,22 @@ $(document).ready(function () {
     //clear the input
     $("#chat-input").val("");
 
-    //push that data up and the name to the Firebase database
-    db.ref("chatLog").push({
-      "name": name,
-      "player": player,
-      "text": chatText,
-    });
+    //make sure you can't smacktalk if you don't have a name
+    if (name == "") {
+      alert("You can't smacktalk without a name, fool!")
+    }
+    else {
+      //push that data up and the name to the Firebase database
+      db.ref("chatLog").push({
+        "name": name,
+        "player": player,
+        "text": chatText,
+      });
+    }
   });
 
   //when player name input is submitted
-  $("#name-submit").click(function(e){
+  $("#name-submit").click(function (e) {
     //stop that button
     e.preventDefault();
 
@@ -114,6 +119,28 @@ $(document).ready(function () {
 
       //let the player know we know their name
       $("<h2 id='welcome-message'>").text("Welcome to the game, " + name + "! Good luck!").prependTo("#game-container");
+
+      //push that name up to firebase
+      db.ref("/playerNames/player" + player).set({
+        "name": name,
+        "player": player
+      })
+      db.ref("/playerNames/player" + player).onDisconnect().remove();
     }
+  });
+
+  //when someone puts a name into firebase
+  db.ref("/playerNames").on("child_added", function(snap){
+    //we neeed to grab the info
+    var playerName = snap.val().name;
+    var playerPlayer = snap.val().player;
+    console.log(playerPlayer);
+
+    //make an h4 tag
+    $("<h4>").addClass("score").attr("id", "player" + playerPlayer + "-score")
+    //stick our html in there
+    .html("Wins: <span id='player"+playerPlayer+"-wins'>0</span> | Losses: <span id='player"+playerPlayer+"-losses'>0</span>")
+    //append it to the right gamespace
+    .appendTo("#player"+playerPlayer+"-gamespace");
   });
 });

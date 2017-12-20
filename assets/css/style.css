@@ -30,7 +30,8 @@ padding: 20px 0 20px 0;
 }
 
 #game-container {
-    width: 998px;
+    width: 1000px;
+    height: 300px;
     margin: 0 auto;
 }
 
@@ -40,6 +41,8 @@ padding: 20px 0 20px 0;
     height: 250px;
     background-color: rgb(238, 200, 75);
     margin: 15px 15px;
+    text-align: center;
+    position: relative;
 }
 #chatbox {
     margin: 0 auto;
@@ -71,4 +74,18 @@ padding: 20px 0 20px 0;
 #name-form {
     margin-left: 60px;
    
+}
+
+.gamespace h2 {
+    padding-top:10px;
+    font-size: 25px;
+}
+#chat-input {
+    width: 254px;
+}
+.score {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    width: 100%;
 }
