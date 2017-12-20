@@ -205,7 +205,7 @@ $(document).ready(function () {
       //if you're player 1 you get to choose
       if (player == 1) {
         $("#player1-choice")
-          .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
+        .html("<button class='rps-choice' choice='rock'><p>Rock</p></button><br><br><button class='rps-choice' choice='paper'><p>Paper</p></button><br><br><button class='rps-choice' choice='scissors'><p>Scissors</p></button>");
       }
     }
     //step 2:
@@ -217,7 +217,7 @@ $(document).ready(function () {
       //if you're player 2 you get to choose
       if (player == 2) {
         $("#player2-choice")
-          .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
+        .html("<button class='rps-choice' choice='rock'><p>Rock</p></button><br><br><button class='rps-choice' choice='paper'><p>Paper</p></button><br><br><button class='rps-choice' choice='scissors'><p>Scissors</p></button>");
       }
 
     }
@@ -270,21 +270,21 @@ $(document).ready(function () {
           $("#results").empty();
           $("<h2>").text(player1Name + " wins!").appendTo("#results");
         }
-        else if (player1Choice == "scissors") {
-          if (player2Choice == "rock") {
-            player1Losses++;
-            player2Wins++;
+      }
+      else if (player1Choice == "scissors") {
+        if (player2Choice == "rock") {
+          player1Losses++;
+          player2Wins++;
 
-            $("#results").empty();
-            $("<h2>").text(player2Name + " wins!").appendTo("#results");
-          }
-          else if (player2Choice == "paper") {
-            player1Wins++;
-            player2Losses++;
+          $("#results").empty();
+          $("<h2>").text(player2Name + " wins!").appendTo("#results");
+        }
+        else if (player2Choice == "paper") {
+          player1Wins++;
+          player2Losses++;
 
-            $("#results").empty();
-            $("<h2>").text(player1Name + " wins!").appendTo("#results");
-          }
+          $("#results").empty();
+          $("<h2>").text(player1Name + " wins!").appendTo("#results");
         }
       }
       //send the scores up to the database
