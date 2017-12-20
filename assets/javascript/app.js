@@ -142,5 +142,8 @@ $(document).ready(function () {
     .html("Wins: <span id='player"+playerPlayer+"-wins'>0</span> | Losses: <span id='player"+playerPlayer+"-losses'>0</span>")
     //append it to the right gamespace
     .appendTo("#player"+playerPlayer+"-gamespace");
+
+    //Let's change the waiting on Player part of our gamespaces
+    $("#player" + playerPlayer + "-name").text(playerName);
   });
 });
