@@ -36,6 +36,8 @@ $(document).ready(function () {
       isPlayer1 = true;
       db.ref("/playerSelect/player1").set(true);
       db.ref("playerSelect/player1").onDisconnect().set(false);
+      //add player number to the name input div
+      $("#player-number-span").text(player);
       
     }
 
@@ -47,6 +49,7 @@ $(document).ready(function () {
       isPlayer2 = true;
       db.ref("/playerSelect/player2").set(true);
       db.ref("playerSelect/player2").onDisconnect().set(false);
+      $("#player-number-span").text(player);
       
     }
 
@@ -64,7 +67,7 @@ $(document).ready(function () {
       .html("<span id='player" + chatPlayer + "-textname'>" + chatName + "</span>: " + chatText)
       //stick that stuff in the text box log thing!
       .appendTo("#chat-text");
-      
+
     db.ref("chatLog").onDisconnect().remove();
   });
 
@@ -85,5 +88,32 @@ $(document).ready(function () {
       "player": player,
       "text": chatText,
     });
+  });
+
+  //when player name input is submitted
+  $("#name-submit").click(function(e){
+    //stop that button
+    e.preventDefault();
+
+    //grab input val
+    var nameVal = $("#name-input").val();
+
+    //empty the input
+    $("#name-input").val("");
+
+    //check to see someone actually put in something as their name
+    if (nameVal == "") {
+      alert("You didn't enter a name. I can't call you nothing the entire game...")
+    }
+    else {
+      //hide the name-select div
+      $("#name-select").addClass("hide");
+
+      //change the person's name
+      name = nameVal;
+
+      //let the player know we know their name
+      $("<h2>").text("Welcome to the game, " + name + "! Good luck!").prependTo("#game-container");
+    }
   });
 });
