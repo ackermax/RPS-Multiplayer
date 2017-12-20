@@ -12,6 +12,7 @@ body {
     height: 200px;
     padding: 10px;
     margin-bottom: 10px;
+    overflow: auto;
 }
 #player1-textname {
     color: orangered;
@@ -30,19 +31,20 @@ padding: 20px 0 20px 0;
 }
 
 #game-container {
-    width: 1000px;
-    height: 300px;
+    width: 100%;
     margin: 0 auto;
+    display: table;
 }
 
 .gamespace {
-    display: inline-block;
+    display: table-cell;
     width: 300px;
     height: 250px;
     background-color: rgb(238, 200, 75);
-    margin: 15px 15px;
+    margin: 15px;
     text-align: center;
     position: relative;
+    border: 15px solid lightgreen;
 }
 #chatbox {
     margin: 0 auto;
@@ -57,7 +59,6 @@ padding: 20px 0 20px 0;
 
 #name-select {
     margin: 0 auto;
-    background-color: rgb(231, 71, 71);
     width: 350px;;
     padding: 5px;
 }
@@ -117,4 +118,7 @@ padding: 20px 0 20px 0;
 .lightborder {
     border: 2px solid yellow;
     border-style: inset;
+}
+.oldbackground {
+    background-color: rgb(231, 71, 71);
 }

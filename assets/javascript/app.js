@@ -122,14 +122,17 @@ $(document).ready(function () {
       alert("You didn't enter a name. I can't call you nothing the entire game...")
     }
     else {
-      //hide the name-select div
-      $("#name-select").addClass("hide");
+      //empty the name-select div
+      $("#name-select").empty();
 
       //change the person's name
       name = nameVal;
 
       //let the player know we know their name
-      $("<h2 id='welcome-message'>").text("Welcome to the game, " + name + "! Good luck!").prependTo("#game-container");
+      $("<h2 id='welcome-message'>").text("Welcome to the game, " + name + "!").appendTo("#name-select");
+
+      //give name-select a new background color. Red is so 3 seconds ago.
+      $("#name-select").removeClass("oldbackground");
 
       //push that name up to firebase
       db.ref("/playerNames/player" + player).set({
