@@ -49,6 +49,20 @@ $(document).ready(function () {
     }
   });
 
+  //we're gonna populate our chat log now with the firebase data
+  db.ref("chatLog").on("child_added", function(snap){
+    //grab the name, player number, and text and stick em in variables for ease of use
+    var chatName = snap.val().name;
+    var chatPlayer = snap.val().player;
+    var chatText = snap.val().text;
+
+    //make a <p> tag and stick some text in there!
+    $("<p>")
+    .html("<span id='player" + chatPlayer +"'>"+chatName+"</span>: " + chatText)
+    //stick that stuff in the text box log thing!
+    .appendTo("#chat-text");
+  });
+
   //when someone clicks the send button to send a chat message
   $("#chat-submit").click(function(e){
     //stop our button from doing things
