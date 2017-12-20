@@ -21,6 +21,8 @@ $(document).ready(function () {
   var isPlayer1;
   var isPlayer2;
   var gameStep;
+  var player1Choice = "";
+  var player2Choice = "";
 
   //trying to set up player one and two
   db.ref("/playerSelect").on("value", function (snap) {
@@ -71,7 +73,7 @@ $(document).ready(function () {
 
     db.ref("/chatLog").onDisconnect().set({
       "disconnect": {
-        "name" : name,
+        "name": name,
         "player": player,
         "text": name + " has disconnected from the game."
       }
@@ -170,7 +172,7 @@ $(document).ready(function () {
   });
 
   //check to see what step of the game we are on
-  db.ref("/gameStep").on("value", function(snap){
+  db.ref("/gameStep").on("value", function (snap) {
     //grab the game step and save it
     gameStep = snap.val().step;
     //now we write code based on which step it is
@@ -178,13 +180,87 @@ $(document).ready(function () {
     //step 1:
     if (gameStep == 1) {
       //add the border to player 1
-      $("#player1-gamespace").addClass("light-border");
+      $("#player1-gamespace").addClass("lightborder");
       //if you're player 1 you get to choose
       if (player == 1) {
-        $("<p>")
-        .html("Rock</p><br><p>Paper</p><br><p>Scissors")
-        .appendTo("#player1-choice");
+        $("#player1-choice")
+        .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
       }
+    }
+    //step 2:
+    else if (gameStep == 2) {
+      //add the border to player 2
+      $("#player2-gamespace").addClass("lightborder");
+      //remove border from player 1
+      $("#player1-gamespace").removeClass("lightborder");
+      //if you're player 2 you get to choose
+      if (player == 2) {
+        $("#player2-choice")
+        .html("<div class='rps-choice' choice='rock'><p>Rock</p></div><br><div class='rps-choice' choice='paper'><p>Paper</p></div><br><div class='rps-choice' choice='scissors'><p>Scissors</p>");
+      }
+      
+    }
+    //step 3:
+    else if (gameStep == 3) {
+      //remove the lightborder
+      $("#player2-gamespace").removeClass("lightborder");
+      
+    }
+  });
+
+  //when a player clicks a choice
+  $(document).on("click", ".rps-choice" ,function(){
+    //store the choice
+    var userChoice = $(this).attr("choice");
+    //are they player 1 or 2?
+    if (player == 1) {
+      //store it in the player 1 choice variable
+      player1Choice = userChoice;
+      //empty player1-choice
+      gameStep = 2;
+      //set the choice in the database
+      db.ref("/playerChoice/player1").set({
+        "choice": player1Choice,
+        "player": 1
+      });
+      db.ref("/playerChoice/player1").onDisconnect().remove();
+      //move the step up in the database
+      db.ref("/gameStep").set({
+        "step": gameStep
+      });
+      //set the gameStep to 2 and push that up
+      $("#player1-choice").empty();
+      //add choice to same div
+      $("<h2>").text(player1Choice).appendTo("#player1-choice");
+    }
+    else if (player == 2) {
+      //store it in the player 2 choice variable
+      player2Choice = userChoice;
+      //set the choice in the database
+      db.ref("/playerChoice/player2").set({
+        "choice": player2Choice,
+        "player": 2
+      });
+      db.ref("/playerChoice/player2").onDisconnect().remove();
+      //set the gameStep to 3 and push that up
+      gameStep = 3;
+      db.ref("/gameStep").set({
+        "step": gameStep
+      });
+      //set the gameStep to 2 and push that up
+      $("#player2-choice").empty();
+      //add choice to same div
+      $("<h2>").text(player2Choice).appendTo("#player2-choice");
+    }
+  });
+
+  //update the playerchoice when we get one from firebase
+  db.ref("/playerChoice").on("child_added", function(snap){
+    if (snap.val().player == 1) {
+      player1Choice = snap.val().choice;
+    }
+    else if (snap.val().player == 2) {
+      player2Choice = snap.val().choice;
     }
   });
 });

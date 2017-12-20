@@ -93,13 +93,28 @@ padding: 20px 0 20px 0;
 #player1-choice p {
     font-size: 25px;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
 #player2-choice p {
     font-size: 25px;
     font-weight: bold;
+    text-transform: uppercase;
 }
 
-.light-border {
+#player1-choice h2 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+#player2-choice h2 {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+.lightborder {
     border: 2px solid yellow;
+    border-style: inset;
 }
